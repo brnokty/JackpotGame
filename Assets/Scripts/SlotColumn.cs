@@ -1,25 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class SlotColumn : MonoBehaviour
 {
-    [SerializeField] private float waitTime = 0.05f;
-    [SerializeField] private List<SlotObject> slotObjects = new List<SlotObject>();
+    public List<SlotObject> slotObjects = new List<SlotObject>();
 
-    public void Spin()
+    public void Spin(int spinCount)
     {
-        StartCoroutine(SpinCoroutine());
+        StartCoroutine(SpinCoroutine(spinCount));
     }
 
 
-    private IEnumerator SpinCoroutine()
+    private IEnumerator SpinCoroutine(int spinCount)
     {
-        for (int i = 0; i < 21; i++)
+        for (int i = 0; i < spinCount; i++)
         {
-            // slotObjects[slotObjects.Count-1].transform.SetSiblingIndex(0);
-            transform.GetChild(transform.childCount - 1).transform.SetSiblingIndex(0);
-            yield return new WaitForSeconds(waitTime);
+            var randNumber = Random.Range(3, transform.childCount);
+            var randomSlot = slotObjects[randNumber];
+            slotObjects.RemoveAt(randNumber);
+            slotObjects.Insert(0, randomSlot);
+            randomSlot.transform.localPosition = new Vector3(0, 420);
+
+            for (int j = 0; j < slotObjects.Count; j++)
+            {
+                slotObjects[j].transform.DOLocalMoveY(210 + (j * -210), JackpotGame.turnTime).SetEase(Ease.Linear);
+            }
+
+            yield return new WaitForSeconds(JackpotGame.waitTime + JackpotGame.turnTime);
         }
     }
 }

@@ -3,7 +3,10 @@
 
     public class JackpotGame
     {
-        // public const float waitTime = 0.05f;
+        public const float waitTime = 0.01f;
+        public const float turnTime = 0.1f;
+        public const int minRandomValue = 21;
+        public const int maxRandomDistanceValue = 10;
         
 
         public static Color GetColor(int colorChoice)
